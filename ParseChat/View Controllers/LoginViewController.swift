@@ -61,7 +61,6 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         let OKAction = UIAlertAction(title: "OK", style: .default) {
             (action) in
-            //handle the response here
         }
         alertController.addAction(OKAction)
         alertControllerInvalidUsername.addAction(OKAction)
