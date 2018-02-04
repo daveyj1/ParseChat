@@ -37,6 +37,15 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         keyboardField.text = ""
     }
     
+    @IBAction func onLogout(_ sender: Any) {
+        PFUser.logOut()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateInitialViewController()
+        present(viewController!, animated: true, completion: nil)
+        print("User has been logged out")
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         keyboardField.layer.cornerRadius = 10
@@ -44,12 +53,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             (action) in
         }
         alertController.addAction(OKAction)
+        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.onTimer), userInfo: nil, repeats: true)
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
         tableView.separatorStyle = .none
+        
         getMessages()
     }
     
@@ -63,13 +74,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             } else if let messages = messages {
                 self.messages = messages
                 self.tableView.reloadData()
+                //self.getMessages()
                 print(messages)
             }
         })
     }
     
     @objc func onTimer() {
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.onTimer), userInfo: nil, repeats: true)
+        getMessages()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,9 +91,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath) as! ChatCell
         let message = messages[indexPath.row]
-        cell.messageLabel.text = message["text"] as! String ?? ""
-        cell.messageLabel.layer.cornerRadius = 16
+        cell.messageLabel.text = " \(message["text"] as! String ?? "") "
         cell.messageLabel.sizeToFit()
+        //cell.
         
         if let user = message["user"] as? PFUser {
             cell.usernameLabel.text = user.username

@@ -37,6 +37,8 @@ class LoginViewController: UIViewController {
     }
     
     
+    
+    
     @IBAction func signupButton(_ sender: Any) {
         //registerUser()
         if (!userNameBox.hasText || !passwordBox.hasText) {
@@ -50,6 +52,7 @@ class LoginViewController: UIViewController {
         newuser.signUpInBackground { (success: Bool, NSError) in
             if success {
                 print("User created")
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
             } else {
                 print(NSError?.localizedDescription)
                 self.present(self.alertControllerAccountExists, animated: true)
